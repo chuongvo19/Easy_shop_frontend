@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  frontend:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    container_name: es_frontend
+    restart: unless-stopped
+    volumes: 
+      - ./app:/app
+    networks:
+      - frontend
+  
+  nginx:
+    image: nginx:latest
+    container_name: es_frontend_nginx
+    volumes: 
+      - ./docker/logs/nginx_log:/var/log/nginx
+      - ./docker/nginx/config/app.conf:/etc/nginx/conf.d/app.conf
+    ports:
+      - "80:80"
+    networks: 
+      - frontend
+
+networks:
+  frontend:
